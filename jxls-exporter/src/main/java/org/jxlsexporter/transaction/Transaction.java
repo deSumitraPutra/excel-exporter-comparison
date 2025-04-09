@@ -19,6 +19,8 @@ public class Transaction {
 
     private BigDecimal amount;
 
+    private String description;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "source_account_id")
     private Account sourceAccount;
