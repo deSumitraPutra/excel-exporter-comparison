@@ -20,6 +20,5 @@
     <modules>
         <module>jxls-exporter</module>
         <module>fast-excel-exporter</module>
-        <module>jxls-exporter</module>
     </modules>
 </project>
