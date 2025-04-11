@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
+@Table(name = "[transaction]")
 @Data
 @EqualsAndHashCode
 public class Transaction {
@@ -33,6 +34,7 @@ public class Transaction {
 
     public TransactionFileDTO toFileDTO() {
         return TransactionFileDTO.builder()
+                .id(this.id)
                 .timestamp(this.createdAt.toString())
                 .fromAccount(this.sourceAccount.getNumber())
                 .fromName(this.sourceAccount.getNickName())
