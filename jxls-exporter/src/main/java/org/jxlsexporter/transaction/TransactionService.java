@@ -8,8 +8,8 @@ import org.jxlsexporter.util.FileUtil;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +23,14 @@ public class TransactionService {
             throw new RuntimeException("No transactions found");
         }
 
-        List<TransactionFileDTO> fileContents = allTransaction.stream()
-                .map(Transaction::toFileDTO)
-                .toList();
         FileTemplate template = this.fileTemplateService.getTemplateByCode("TRANSACTION");
-        Map<String, Object> data = Map.of("transactions", fileContents);
+        List<TransactionFileDTO> fileContents = allTransaction.stream()
+            .map(Transaction::toFileDTO)
+            .toList();
+        HashMap<String, Object> data = new HashMap<>() {{
+            put("transactions", fileContents);
+        }};
+
         return FileUtil.generateByteArrayFile(template.getContent(), data);
     }
 }
