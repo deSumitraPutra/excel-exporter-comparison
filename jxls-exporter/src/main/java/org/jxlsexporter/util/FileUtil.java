@@ -4,8 +4,8 @@ import org.jxls.transform.poi.JxlsPoiTemplateFillerBuilder;
 import org.springframework.http.HttpHeaders;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 
 public class FileUtil {
@@ -18,15 +18,12 @@ public class FileUtil {
         return httpHeaders;
     }
 
-    public static byte[] generateByteArrayFile(byte[] template, HashMap<String, Object> data) throws IOException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    public static void processTemplate(OutputStream outputStream, byte[] template, HashMap<String, Object> data) throws IOException {
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(template)) {
-            JxlsOutputByteArray jxlsOutputByteArray = new JxlsOutputByteArray(outputStream);
+            JxlsOutputStream jxlsOutputStream = new JxlsOutputStream(outputStream);
             JxlsPoiTemplateFillerBuilder.newInstance()
                 .withTemplate(inputStream)
-                .buildAndFill(data, jxlsOutputByteArray);
+                .buildAndFill(data, jxlsOutputStream);
         }
-
-        return outputStream.toByteArray();
     }
 }

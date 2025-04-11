@@ -1,5 +1,7 @@
 package org.jxlsexporter.transaction;
 
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.jxlsexporter.filetemplate.FileTemplate;
 import org.jxlsexporter.filetemplate.FileTemplateService;
@@ -18,6 +20,18 @@ public class TransactionService {
     private final FileTemplateService fileTemplateService;
 
     public byte[] generateFileAsByteArray() throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        this.generateToOutputStream(outputStream);
+
+        return outputStream.toByteArray();
+    }
+
+    public void generateToResponseStream(HttpServletResponse response) throws IOException {
+        ServletOutputStream outputStream = response.getOutputStream();
+        this.generateToOutputStream(outputStream);
+    }
+
+    private void generateToOutputStream(OutputStream outputStream) throws IOException {
         List<Transaction> allTransaction = this.repository.findAll();
         if (allTransaction.isEmpty()) {
             throw new RuntimeException("No transactions found");
@@ -31,6 +45,6 @@ public class TransactionService {
             put("transactions", fileContents);
         }};
 
-        return FileUtil.generateByteArrayFile(template.getContent(), data);
+        FileUtil.processTemplate(outputStream, template.getContent(), data);
     }
 }

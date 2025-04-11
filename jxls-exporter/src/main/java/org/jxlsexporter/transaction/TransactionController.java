@@ -1,6 +1,7 @@
 package org.jxlsexporter.transaction;
 
-import lombok.AllArgsConstructor;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.jxlsexporter.util.FileUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/transactions")
 public class TransactionController {
     private final TransactionService service;
@@ -26,5 +26,15 @@ public class TransactionController {
         return ResponseEntity.ok()
                 .headers(responseHeader)
                 .body(generatedFile);
+    }
+
+    @GetMapping("/outstream")
+    public void downloadStream(HttpServletResponse response) throws IOException {
+        String filename = "Transactions-stream.xlsx";
+        response.setHeader("Content-Disposition", String.format("attachment; filename=%s;", filename));
+        response.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+
+        this.service.generateToResponseStream(response);
     }
 }
