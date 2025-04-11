@@ -1,0 +1,19 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd"
+>
+    <property name="now" value="SYSDATETINEOFFSET()" dbms="mssql"/>
+    <changeSet id="seeding-file-template" author="sum">
+        <insert tableName="file_template">
+            <column name="code" value="ACCOUNT"/>
+            <column name="description" value="Account report template"/>
+            <column name="content" type="blob" valueBlobFile="./template/account-template.xlsx"/>
+        </insert>
+        <insert tableName="file_template">
+            <column name="code" value="TRANSACTION"/>
+            <column name="description" value="Transaction report template"/>
+            <column name="content" type="blob" valueBlobFile="./template/transaction-template.xlsx"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
