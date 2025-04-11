@@ -1,6 +1,7 @@
 package org.jxlsexporter.transaction;
 
 import lombok.AllArgsConstructor;
+import org.jxlsexporter.util.FileUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,20 +17,14 @@ import java.util.List;
 public class TransactionController {
     private final TransactionService service;
 
-    @GetMapping
-    public ResponseEntity<byte[]> downloadTransactions() throws IOException {
-        byte[] generatedFile = this.service.generateFile();
+    @GetMapping("/bytes-array")
+    public ResponseEntity<byte[]> downloadAsBytesArray() throws IOException {
+        byte[] generatedFile = this.service.generateFileAsByteArray();
         String filename = "Transactions.xlsx";
-        String contentDisposition = "attachment; filename=" + filename + ";";
-        String contentType = "application/vnd.ms-excel";
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Content-Disposition", contentDisposition);
-        httpHeaders.add("Content-Type", contentType);
-        httpHeaders.add("Content-Length", String.valueOf(generatedFile.length));
-        httpHeaders.add("Access-Control-Expose-Headers", "Content-Disposition");
+        HttpHeaders responseHeader = FileUtil.generateExcelHeaders(filename);
 
         return ResponseEntity.ok()
-                .headers(httpHeaders)
+                .headers(responseHeader)
                 .body(generatedFile);
     }
 }

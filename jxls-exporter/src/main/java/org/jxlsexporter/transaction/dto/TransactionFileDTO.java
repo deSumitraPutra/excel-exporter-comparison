@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @Builder
 @EqualsAndHashCode
 public class TransactionFileDTO {
+    private Long id;
     private String timestamp;
     private String fromAccount;
     private String fromName;
