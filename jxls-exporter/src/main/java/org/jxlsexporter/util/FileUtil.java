@@ -1,5 +1,6 @@
 package org.jxlsexporter.util;
 
+import org.jxls.builder.JxlsStreaming;
 import org.jxls.transform.poi.JxlsPoiTemplateFillerBuilder;
 import org.springframework.http.HttpHeaders;
 
@@ -22,6 +23,7 @@ public class FileUtil {
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(template)) {
             JxlsOutputStream jxlsOutputStream = new JxlsOutputStream(outputStream);
             JxlsPoiTemplateFillerBuilder.newInstance()
+                .withStreaming(JxlsStreaming.AUTO_DETECT)
                 .withTemplate(inputStream)
                 .buildAndFill(data, jxlsOutputStream);
         }
