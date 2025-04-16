@@ -7,6 +7,8 @@ import org.jxlsexporter.filetemplate.FileTemplate;
 import org.jxlsexporter.filetemplate.FileTemplateService;
 import org.jxlsexporter.transaction.dto.TransactionFileDTO;
 import org.jxlsexporter.util.FileUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -19,26 +21,27 @@ public class TransactionService {
     private final TransactionRepository repository;
     private final FileTemplateService fileTemplateService;
 
-    public byte[] generateFileAsByteArray() throws IOException {
+    public byte[] generateFileAsByteArray(int limit) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        this.generateToOutputStream(outputStream);
+        this.generateToOutputStream(outputStream, limit);
 
         return outputStream.toByteArray();
     }
 
-    public void generateToResponseStream(HttpServletResponse response) throws IOException {
+    public void generateToResponseStream(HttpServletResponse response, int limit) throws IOException {
         ServletOutputStream outputStream = response.getOutputStream();
-        this.generateToOutputStream(outputStream);
+        this.generateToOutputStream(outputStream, limit);
     }
 
-    private void generateToOutputStream(OutputStream outputStream) throws IOException {
-        List<Transaction> allTransaction = this.repository.findAll();
+    private void generateToOutputStream(OutputStream outputStream, int limit) throws IOException {
+        PageRequest pageRequest = PageRequest.of(0, limit);
+        Page<Transaction> allTransaction = this.repository.findAll(pageRequest);
         if (allTransaction.isEmpty()) {
             throw new RuntimeException("No transactions found");
         }
 
         FileTemplate template = this.fileTemplateService.getTemplateByCode("TRANSACTION");
-        List<TransactionFileDTO> fileContents = allTransaction.stream()
+        List<TransactionFileDTO> fileContents = allTransaction.get()
             .map(Transaction::toFileDTO)
             .toList();
         HashMap<String, Object> data = new HashMap<>() {{
