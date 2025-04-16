@@ -21,26 +21,26 @@ public class TransactionService {
     private final TransactionRepository repository;
     private final FileTemplateService fileTemplateService;
 
-    public byte[] generateFileAsByteArray(int limit) throws IOException {
+    public byte[] generateFileAsByteArray(int limit, String templateName) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        this.generateToOutputStream(outputStream, limit);
+        this.generateToOutputStream(outputStream, limit, templateName);
 
         return outputStream.toByteArray();
     }
 
-    public void generateToResponseStream(HttpServletResponse response, int limit) throws IOException {
+    public void generateToResponseStream(HttpServletResponse response, int limit, String templateName) throws IOException {
         ServletOutputStream outputStream = response.getOutputStream();
-        this.generateToOutputStream(outputStream, limit);
+        this.generateToOutputStream(outputStream, limit, templateName);
     }
 
-    private void generateToOutputStream(OutputStream outputStream, int limit) throws IOException {
+    private void generateToOutputStream(OutputStream outputStream, int limit, String templateName) throws IOException {
         PageRequest pageRequest = PageRequest.of(0, limit);
         Page<Transaction> allTransaction = this.repository.findAll(pageRequest);
         if (allTransaction.isEmpty()) {
             throw new RuntimeException("No transactions found");
         }
 
-        FileTemplate template = this.fileTemplateService.getTemplateByCode("TRANSACTION");
+        FileTemplate template = this.fileTemplateService.getTemplateByCode(templateName);
         List<TransactionFileDTO> fileContents = allTransaction.get()
             .map(Transaction::toFileDTO)
             .toList();
