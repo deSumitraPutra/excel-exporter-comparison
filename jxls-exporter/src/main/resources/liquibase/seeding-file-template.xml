@@ -15,5 +15,10 @@
             <column name="description" value="Transaction report template"/>
             <column name="content" type="blob" valueBlobFile="./template/transaction-template.xlsx"/>
         </insert>
+        <insert tableName="file_template">
+            <column name="code" value="TRANSACTION_STREAM"/>
+            <column name="description" value="Transaction report template stream on"/>
+            <column name="content" type="blob" valueBlobFile="./template/transaction-template-streaming.xlsx"/>
+        </insert>
     </changeSet>
 </databaseChangeLog>
