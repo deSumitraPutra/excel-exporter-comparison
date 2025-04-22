@@ -1,0 +1,22 @@
+services:
+  jxls-exporter-local:
+    image: jxls-exporter
+    build: .
+    ports:
+      - "3001:3000"
+    environment:
+      SERVER_PORT: ${SERVER_PORT}
+      DB_URL: ${DB_URL}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 512M
+
+networks:
+  app-network:
+    external: true
