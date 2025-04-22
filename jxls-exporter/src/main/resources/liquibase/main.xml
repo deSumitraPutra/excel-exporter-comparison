@@ -7,4 +7,5 @@
     <include file="/liquibase/create-table-file-template.sql" relativeToChangelogFile="false" />
     <include file="/liquibase/create-table-transaction.sql" relativeToChangelogFile="false" />
     <include file="/liquibase/seeding-file-template.xml" relativeToChangelogFile="false" />
+    <include file="/liquibase/seeding-transaction.sql.xml" relativeToChangelogFile="false" />
 </databaseChangeLog>
