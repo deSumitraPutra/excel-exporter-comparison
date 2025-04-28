@@ -1,4 +1,4 @@
-package org.jxlsexporter.account;
+package org.fastexcelexporter.account;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
